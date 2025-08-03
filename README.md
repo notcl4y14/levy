@@ -39,9 +39,9 @@ end
 	- Systems
 	- Schedules
 	- Plugins
+	- Resources
 
 - **Planned features**
-	- Resources
 	- Scenes
 
 - **Quite possible features**
@@ -90,6 +90,12 @@ lovey.App.remove_entity = function (self, uuid) end
 -- @return table(Entity) or nil
 lovey.App.get_entity = function (self, uuid) end
 
+-- Searches for a resource with a specific name and returns it.
+-- Returns nil if found none
+-- @param resource : table(Resource)
+-- @return table(Resource) or nil
+lovey.App.get_resource = function (self, resource) end
+
 -- Adds a system to the schedule
 -- May error() the program if the arguments don't match parameters
 -- @param schedule : string ["startup"|"update"|"draw"]
@@ -102,6 +108,12 @@ lovey.App.add_system = function (self, schedule, system) end
 -- @param plugin : table(Plugin)
 -- @return self : table(App)
 lovey.App.add_plugin = function (self, plugin) end
+
+-- Adds a resource.
+-- May error() the program if the arguments don't match parameters
+-- @param resource : table(Resource)
+-- @return self : table(App)
+lovey.App.add_resource = function (self, resource) end
 
 -- Returns an entire table of entities
 -- @return table(Entity)[]

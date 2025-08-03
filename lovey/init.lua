@@ -43,6 +43,7 @@ lovey.App = {
 		_DRAW = {},
 	},
 	_PLUGINS = {},
+	_RESOURCES = {},
 }
 lovey.App.__index = lovey.App
 
@@ -58,6 +59,7 @@ lovey.App.new = function ()
 			_DRAW = {},
 		},
 		_PLUGINS = {},
+		_RESOURCES = {},
 	}, lovey.App)
 	return new_app
 end
@@ -92,6 +94,20 @@ end
 lovey.App.get_entity = function (self, uuid)
 	for k, v in pairs(self._ENTITIES) do
 		if v.__UUID == uuid then
+			return v
+		end
+	end
+
+	return nil
+end
+
+-- Searches for a resource with a specific name and returns it.
+-- Returns nil if found none
+-- @param resource : table(Resource)
+-- @return table(Resource) or nil
+lovey.App.get_resource = function (self, resource)
+	for k, v in pairs(self._RESOURCES) do
+		if v._NAME == resource._NAME then
 			return v
 		end
 	end
@@ -143,6 +159,19 @@ lovey.App.add_plugin = function (self, plugin)
 	end
 	
 	table.insert(self._PLUGINS, plugin)
+	return self
+end
+
+-- Adds a resource.
+-- May error() the program if the arguments don't match parameters
+-- @param resource : table(Resource)
+-- @return self : table(App)
+lovey.App.add_resource = function (self, resource)
+	if type(resource) ~= "table" then
+		error("Argument \"resource\" should be a table of Resource")
+	end
+	
+	table.insert(self._RESOURCES, resource)
 	return self
 end
 
@@ -298,6 +327,25 @@ lovey.Plugin.__index = lovey.Plugin
 lovey.Plugin.new = function (t)
 	local new_plugin = setmetatable(t, lovey.Plugin)
 	return new_plugin
+end
+
+-- ================
+-- Resource
+-- ================
+
+lovey.Resource = {
+	_NAME = name,
+}
+lovey.Resource.__index = lovey.Resource
+
+-- Creates a new Resource.
+-- @param name : string
+-- @param t : table(Resource)
+-- @return table(Resource)
+lovey.Resource.new = function (name, t)
+	local new_resource = setmetatable(t, lovey.Plugin)
+	new_resource._NAME = name
+	return new_resource
 end
 
 -- ================

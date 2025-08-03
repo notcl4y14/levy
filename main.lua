@@ -38,6 +38,14 @@ local NotPoint = lovey.Component.new("NotPoint", {
 })
 
 -- ================
+-- RESOURCES
+-- ================
+
+local FPSResource = lovey.Resource.new("FPS", {
+	fps = 0,
+})
+
+-- ================
 -- SYSTEMS
 -- ================
 
@@ -179,6 +187,19 @@ local function draw_not_points (app)
 	end
 end
 
+function update_fps_resource (app)
+	local fps_res = app:get_resource(FPSResource)
+
+	fps_res.fps = love.timer.getFPS()
+end
+
+function draw_fps_resource (app)
+	local fps_res = app:get_resource(FPSResource)
+
+	love.graphics.setColor(1.0, 1.0, 1.0, 1.0)
+	love.graphics.print("FPS: " .. fps_res.fps, 0, 0)
+end
+
 -- ================
 -- PLUGINS
 -- ================
@@ -206,8 +227,12 @@ local InitPlugin = lovey.Plugin.new({
 
 		app:add_system("Startup", init_points)
 		app:add_system("Update", update_points)
+		app:add_system("Update", update_fps_resource)
 		app:add_system("Draw", draw_not_points)
 		app:add_system("Draw", draw_points)
+		app:add_system("Draw", draw_fps_resource)
+
+		app:add_resource(FPSResource)
 	end
 })
 
