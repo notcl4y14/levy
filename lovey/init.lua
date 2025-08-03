@@ -1,7 +1,7 @@
 local lovey = {}
 
 -- ================
--- LEVY
+-- LOVEY
 -- ================
 
 local function is_schedule_name_valid (schedule)
@@ -42,6 +42,7 @@ lovey.App = {
 		_UPDATE = {},
 		_DRAW = {},
 	},
+	_PLUGINS = {},
 }
 lovey.App.__index = lovey.App
 
@@ -55,7 +56,8 @@ lovey.App.new = function ()
 			_STARTUP = {},
 			_UPDATE = {},
 			_DRAW = {},
-		}
+		},
+		_PLUGINS = {},
 	}, lovey.App)
 	return new_app
 end
@@ -131,14 +133,31 @@ lovey.App.add_system = function (self, schedule, system)
 	return self
 end
 
+-- Adds a plugin
+-- May error() the program if the arguments don't match parameters
+-- @param plugin : table(Plugin)
+-- @return self : table(App)
+lovey.App.add_plugin = function (self, plugin)
+	if type(plugin) ~= "table" then
+		error("Argument \"plugin\" should be a table of Plugin")
+	end
+	
+	table.insert(self._PLUGINS, plugin)
+	return self
+end
+
 -- Returns an entire table of entities
 -- @return table(Entity)[]
 lovey.App.get_entities = function (self)
 	return self._ENTITIES
 end
 
--- Dispatches a Startup schedule to systems
+-- Dispatches a Startup schedule to systems and starts plugins
 lovey.App.start = function (self)
+	for _, v in pairs(self._PLUGINS) do
+		v.build(self)
+	end
+
 	for _, v in pairs(self._SYSTEMS._STARTUP) do
 		v(self)
 	end
@@ -265,7 +284,24 @@ end
 -- ================
 
 -- ================
--- LEVY
+-- PLUGIN
+-- ================
+
+lovey.Plugin = {
+	build = function (app) end,
+}
+lovey.Plugin.__index = lovey.Plugin
+
+-- Creates a new Plugin.
+-- @param t : table(Plugin)
+-- @return table(Plugin)
+lovey.Plugin.new = function (t)
+	local new_plugin = setmetatable(t, lovey.Plugin)
+	return new_plugin
+end
+
+-- ================
+-- LOVEY
 -- ================
 
 return lovey

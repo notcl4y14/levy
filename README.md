@@ -38,11 +38,11 @@ end
 	- Components
 	- Systems
 	- Schedules
+	- Plugins
 
 - **Planned features**
 	- Resources
 	- Scenes
-	- Plugins
 
 - **Quite possible features**
 	- Built-in Component Types and Systems
@@ -96,6 +96,12 @@ lovey.App.get_entity = function (self, uuid) end
 -- @param system : function(app) [function(app, dt) for "Update" schedule]
 -- @return self : table(App)
 lovey.App.add_system = function (self, schedule, system) end
+
+-- Adds a plugin
+-- May error() the program if the arguments don't match parameters
+-- @param plugin : table(Plugin)
+-- @return self : table(App)
+lovey.App.add_plugin = function (self, plugin) end
 
 -- Returns an entire table of entities
 -- @return table(Entity)[]
@@ -154,6 +160,19 @@ lovey.Entity.get_components = function (self) end
 -- @param t : table
 -- @return table(Component)
 lovey.Component.new = function (name, t) end
+
+-- ================
+-- PLUGIN
+-- ================
+
+lovey.Plugin = {
+	build = function (app) end,
+}
+
+-- Creates a new Plugin.
+-- @param t : table(Plugin)
+-- @return table(Plugin)
+lovey.Plugin.new = function (t) end
 
 -- ================
 -- LEVY

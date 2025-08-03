@@ -180,6 +180,38 @@ local function draw_not_points (app)
 end
 
 -- ================
+-- PLUGINS
+-- ================
+
+local InitPlugin = lovey.Plugin.new({
+	build = function (app)
+		app:create_entity()
+			:add_component(NotPoint.new({
+				x = love.graphics.getWidth() / 2,
+				y = love.graphics.getHeight() / 2,
+				w = 50,
+				h = 50
+			}))
+			:add_component(Color.new({
+				r = math.random(),
+				g = math.random(),
+				b = math.random()
+			}))
+
+		for i=1, AMOUNT_OF_POINTS do
+			app:create_entity()
+				:add_component(Point.new({x=0, y=0, vx=0, vy=0, as=0}))
+				:add_component(Color.new({r=0, g=0, b=0}))
+		end
+
+		app:add_system("Startup", init_points)
+		app:add_system("Update", update_points)
+		app:add_system("Draw", draw_not_points)
+		app:add_system("Draw", draw_points)
+	end
+})
+
+-- ================
 -- MAIN
 -- ================
 
@@ -190,30 +222,7 @@ function love.load()
 	math.randomseed(os.time())
 	
 	app = lovey.App.new()
-
-	app:create_entity()
-		:add_component(NotPoint.new({
-			x = love.graphics.getWidth() / 2,
-			y = love.graphics.getHeight() / 2,
-			w = 50,
-			h = 50
-		}))
-		:add_component(Color.new({
-			r = math.random(),
-			g = math.random(),
-			b = math.random()
-		}))
-
-	for i=1, AMOUNT_OF_POINTS do
-		app:create_entity()
-			:add_component(Point.new({x=0, y=0, vx=0, vy=0, as=0}))
-			:add_component(Color.new({r=0, g=0, b=0}))
-	end
-
-	app:add_system("Startup", init_points)
-	app:add_system("Update", update_points)
-	app:add_system("Draw", draw_not_points)
-	app:add_system("Draw", draw_points)
+		:add_plugin(InitPlugin)
 
 	app:start()
 end
