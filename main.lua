@@ -1,6 +1,6 @@
-local levy = require("levy")
+local lovey = require("lovey")
 
--- This file is an example of using Levy, use the `levy`
+-- This file is an example of using Lovey, use the `lovey`
 -- directory instead to get the actual library.
 
 -- ================
@@ -15,7 +15,7 @@ local OBJECT_HEIGHT = 10
 -- COMPONENTS
 -- ================
 
-local Point = levy.Component.new("Point", {
+local Point = lovey.Component.new("Point", {
 	x = 0.0,
 	y = 0.0,
 	vx = 0.0,
@@ -24,13 +24,13 @@ local Point = levy.Component.new("Point", {
 	as = 0.0, -- Additional Size, gets decreased each tick until it reaches 0
 })
 
-local Color = levy.Component.new("Color", {
+local Color = lovey.Component.new("Color", {
 	r = 0.0,
 	g = 0.0,
 	b = 0.0,
 })
 
-local NotPoint = levy.Component.new("NotPoint", {
+local NotPoint = lovey.Component.new("NotPoint", {
 	x = 0.0,
 	y = 0.0,
 	w = 0.0,
@@ -189,7 +189,7 @@ function love.load()
 	-- Start with a different seed
 	math.randomseed(os.time())
 	
-	app = levy.App.new()
+	app = lovey.App.new()
 
 	app:create_entity()
 		:add_component(NotPoint.new({
