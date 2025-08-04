@@ -203,6 +203,10 @@ function App:get_entities ()
 	return self._Entities
 end
 
+function App:clear_entities ()
+	self._Entities = {}
+end
+
 -- Dispatches a Startup schedule to systems and starts plugins
 function App:start ()
 	for _, v in pairs(self._Plugins) do
