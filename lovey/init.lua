@@ -1,7 +1,17 @@
+-- ================
+-- LOVEY
+-- ================
+
 local lovey = {}
 
 -- ================
--- LOVEY
+-- GLOBAL
+-- ================
+
+local _UUID_MAX = 2000000000
+
+-- ================
+-- UTIL
 -- ================
 
 local function is_schedule_name_valid (schedule)
@@ -18,9 +28,9 @@ local function is_schedule_name_valid (schedule)
 	return false
 end
 
--- ================
--- UTIL
--- ================
+local function get_random_uuid (uuid_max)
+	return math.floor(math.random() * uuid_max)
+end
 
 local function merge_table_with (t1, t2)
 	for k, v in pairs(t2) do
@@ -35,7 +45,7 @@ end
 -- ================
 
 lovey.App = {
-	_UUID_MAX = 2000000000,
+	_UUID_MAX = _UUID_MAX,
 	_ENTITIES = {},
 	_SYSTEMS = {
 		_STARTUP = {},
@@ -61,6 +71,7 @@ lovey.App.new = function ()
 		_PLUGINS = {},
 		_RESOURCES = {},
 	}, lovey.App)
+
 	return new_app
 end
 
@@ -68,8 +79,10 @@ end
 -- @return table(Entity)
 lovey.App.create_entity = function (self)
 	local new_entity = lovey.Entity.new()
-	new_entity._UUID = math.floor(math.random(1, self._UUID_MAX))
+	new_entity._UUID = get_random_uuid(self._UUID_MAX)
+
 	table.insert(self._ENTITIES, new_entity)
+	
 	return self._ENTITIES[#self._ENTITIES]
 end
 
@@ -92,8 +105,13 @@ end
 -- @param uuid : number (int)
 -- @return table(Entity) or nil
 lovey.App.get_entity = function (self, uuid)
-	for k, v in pairs(self._ENTITIES) do
-		if v.__UUID == uuid then
+	if type(uuid) ~= "number" then
+		error("Argument \"uuid\" should be a number")
+	end
+
+	-- Search for an entity
+	for _, v in pairs(self._ENTITIES) do
+		if v._UUID == uuid then
 			return v
 		end
 	end
@@ -106,8 +124,13 @@ end
 -- @param resource : table(Resource)
 -- @return table(Resource) or nil
 lovey.App.get_resource = function (self, resource)
-	for k, v in pairs(self._RESOURCES) do
-		if v._NAME == resource._NAME then
+	if type(resource) ~= "table" then
+		error("Argument \"resource\" should be a table of Resource")
+	end
+
+	-- Search for a resource
+	for _, v in pairs(self._RESOURCES) do
+		if v._UUID == resource._UUID then
 			return v
 		end
 	end
@@ -137,13 +160,10 @@ lovey.App.add_system = function (self, schedule, system)
 
 	if schedule == "startup" then
 		table.insert(self._SYSTEMS._STARTUP, system)
-		-- print("ADDED TO STARTUP")
 	elseif schedule == "update" then
 		table.insert(self._SYSTEMS._UPDATE, system)
-		-- print("ADDED TO UPDATE")
 	elseif schedule == "draw" then
 		table.insert(self._SYSTEMS._DRAW, system)
-		-- print("ADDED TO DRAW")
 	end
 
 	return self
@@ -159,6 +179,7 @@ lovey.App.add_plugin = function (self, plugin)
 	end
 	
 	table.insert(self._PLUGINS, plugin)
+
 	return self
 end
 
@@ -224,6 +245,7 @@ lovey.Entity.new = function ()
 		_UUID = 0,
 		_COMPONENTS = {}
 	}, lovey.Entity)
+
 	return new_entity
 end
 
@@ -232,11 +254,11 @@ end
 -- @param component : table(Component)
 -- @return self : table(Entity)
 lovey.Entity.add_component = function (self, component)
-	if self._COMPONENTS[component._NAME] ~= nil then
-		error("Cannot readd component [" .. component._NAME .. "]: already added")
+	if self._COMPONENTS[component._UUID] ~= nil then
+		error("Cannot readd component [" .. component._UUID .. "]: already added")
 	end
 
-	self._COMPONENTS[component._NAME] = component
+	self._COMPONENTS[component._UUID] = component
 
 	return self
 end
@@ -245,11 +267,11 @@ end
 -- May error() the program if the component does not exist
 -- @param component : table(Component)
 lovey.Entity.remove_component = function (self, component)
-	if self._COMPONENTS[component._NAME] == nil then
-		error("Component [" .. component._NAME .. "] cannot be deleted: it is not added")
+	if self._COMPONENTS[component._UUID] == nil then
+		error("Component [" .. component._UUID .. "] cannot be deleted: it is not added")
 	end
 	
-	table.remove(self._COMPONENTS, component._NAME)
+	table.remove(self._COMPONENTS, component._UUID)
 end
 
 -- Checks if the Entity has a certain component,
@@ -257,14 +279,14 @@ end
 -- @param component : table(Component)
 -- @return bool
 lovey.Entity.has_component = function (self, component)
-	return self._COMPONENTS[component._NAME] ~= nil
+	return self._COMPONENTS[component._UUID] ~= nil
 end
 
 -- Gets the component from the Entity
 -- @param component : table(Component)
 -- @return table(Component)
 lovey.Entity.get_component = function (self, component)
-	return self._COMPONENTS[component._NAME]
+	return self._COMPONENTS[component._UUID]
 end
 
 -- Returns an entire table of Entity components
@@ -279,25 +301,12 @@ end
 
 lovey.Component = {}
 
---[[
-lovey.Component = {
-	_NAME = "[UNNAMED COMPONENT]",
-}
-lovey.Component.__index = lovey.Component
-
-lovey.Component.new = function ()
-	local new_component = setmetatable({}, lovey.Component)
-	return new_component
-end
-]]
-
 -- Creates a new Component type.
--- @param name : string
 -- @param t : table
 -- @return table(Component)
-lovey.Component.new = function (name, t)
+lovey.Component.new = function (t)
 	local new_component = setmetatable({
-		_NAME = name,
+		_UUID = get_random_uuid(_UUID_MAX),
 	}, t)
 	new_component.__index = new_component
 
@@ -326,25 +335,26 @@ lovey.Plugin.__index = lovey.Plugin
 -- @return table(Plugin)
 lovey.Plugin.new = function (t)
 	local new_plugin = setmetatable(t, lovey.Plugin)
+
 	return new_plugin
 end
 
 -- ================
--- Resource
+-- RESOURCE
 -- ================
 
 lovey.Resource = {
-	_NAME = name,
+	_UUID = 0,
 }
 lovey.Resource.__index = lovey.Resource
 
 -- Creates a new Resource.
--- @param name : string
 -- @param t : table(Resource)
 -- @return table(Resource)
-lovey.Resource.new = function (name, t)
+lovey.Resource.new = function (t)
 	local new_resource = setmetatable(t, lovey.Plugin)
-	new_resource._NAME = name
+	new_resource._UUID = get_random_uuid(_UUID_MAX)
+
 	return new_resource
 end
 

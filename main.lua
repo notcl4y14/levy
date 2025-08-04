@@ -15,7 +15,7 @@ local OBJECT_HEIGHT = 10
 -- COMPONENTS
 -- ================
 
-local Point = lovey.Component.new("Point", {
+local Point = lovey.Component.new({
 	x = 0.0,
 	y = 0.0,
 	vx = 0.0,
@@ -24,13 +24,13 @@ local Point = lovey.Component.new("Point", {
 	as = 0.0, -- Additional Size, gets decreased each tick until it reaches 0
 })
 
-local Color = lovey.Component.new("Color", {
+local Color = lovey.Component.new({
 	r = 0.0,
 	g = 0.0,
 	b = 0.0,
 })
 
-local NotPoint = lovey.Component.new("NotPoint", {
+local NotPoint = lovey.Component.new({
 	x = 0.0,
 	y = 0.0,
 	w = 0.0,
@@ -41,7 +41,7 @@ local NotPoint = lovey.Component.new("NotPoint", {
 -- RESOURCES
 -- ================
 
-local FPSResource = lovey.Resource.new("FPS", {
+local FPSResource = lovey.Resource.new({
 	fps = 0,
 })
 

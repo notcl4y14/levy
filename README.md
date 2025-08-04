@@ -168,10 +168,9 @@ lovey.Entity.get_components = function (self) end
 -- ================
 
 -- Creates a new Component type.
--- @param name : string
 -- @param t : table
 -- @return table(Component)
-lovey.Component.new = function (name, t) end
+lovey.Component.new = function (t) end
 
 -- ================
 -- PLUGIN
@@ -185,6 +184,15 @@ lovey.Plugin = {
 -- @param t : table(Plugin)
 -- @return table(Plugin)
 lovey.Plugin.new = function (t) end
+
+-- ================
+-- RESOURCE
+-- ================
+
+-- Creates a new Resource.
+-- @param t : table(Resource)
+-- @return table(Resource)
+lovey.Resource.new = function (t) end
 
 -- ================
 -- LEVY
