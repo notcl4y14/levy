@@ -44,18 +44,17 @@ end
 	- Schedules
 	- Plugins
 	- Resources
+	- A few built-in Component Types ~~and Systems~~
 
 - **Planned features**
 	- Scenes
-	- Quieries
+	- Queries
 
 - **Quite possible features**
-	- Built-in Component Types and Systems
 	- Events
 
 - **Possible features**
 	- Custom schedules
-	- System entity-iterators?
 
 ## Differences from Bevy
 As expected, Lovey is written in Lua and for Lua, Bevy is written in Rust and for Rust, therefore there are some differences between these two due to the way they work, their limitations and features.
