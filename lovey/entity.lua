@@ -47,13 +47,6 @@ end
 --- @param component Component
 --- @noreturn
 function Entity:remove_component (component)
-	-- I don't know why would anyone do that.
-	-- Why would anyone submit a ComponentInstance
-	-- as an argument to remove the component.
-	-- if component._IsComponentInstance then
-	-- 	component = component._Type
-	-- end
-
 	if self._Components[component._UUID] == nil then
 		error("Component [" .. component._UUID .. "] cannot be deleted: it is not added")
 	end

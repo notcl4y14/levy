@@ -100,7 +100,7 @@ end
 
 --- Return an entity with a specified UUID.
 --- @param uuid integer
---- @return Entity|nil
+--- @return Entity?
 function App:get_entity (uuid)
 	if type(uuid) ~= "number" then
 		error("Argument \"uuid\" should be a number")
@@ -118,7 +118,7 @@ end
 
 --- Returns a resource with a specified name.
 --- @param resource Resource
---- @return Resource|nil
+--- @return Resource?
 function App:get_resource (resource)
 	if type(resource) ~= "table" then
 		error("Argument \"resource\" should be a table of Resource")

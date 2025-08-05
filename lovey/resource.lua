@@ -14,6 +14,23 @@ local Resource = {
 Resource.__index = Resource
 
 --- Creates a new resource instance.
+--- 
+--- Table `t` assigns properties to that resource.
+--- 
+--- Example:
+--- ```lua
+--- local Resource = lovey.Resource
+--- 
+--- local GameScoreResource = Resource:new({
+--- 	currentScore = 0,
+--- 	lastScore    = 0,
+--- 	hiScore      = 0,
+--- })
+--- 
+--- -- Adding a resource to an app
+--- app:add_resource(GameScoreResource)
+--- ```
+--- 
 --- @param t table
 --- @return Resource
 function Resource:new (t)
