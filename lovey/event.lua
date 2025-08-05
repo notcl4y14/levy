@@ -7,6 +7,7 @@ local Util   = require(PATH..".util")
 -- EVENT READER
 -- ================
 
+--- @class EventReader
 local EventReader = {
 	_UUID = 0,
 	_Call = nil,
@@ -17,6 +18,7 @@ EventReader.__index = EventReader
 -- EVENT WRITER
 -- ================
 
+--- @class EventWriter
 local EventWriter = {
 	_Name = "",
 	_Readers = {}

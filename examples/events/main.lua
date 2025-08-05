@@ -9,7 +9,6 @@ local lovey = require("lovey")
 local App       = lovey.App
 local Component = lovey.Component
 local System    = lovey.System
-local Resource  = lovey.Resource
 
 -- ================
 -- GLOBAL
@@ -109,7 +108,7 @@ local PlayerMovementSystem = System:new(function (app, dt)
 				player.position_y = player.position_y + PLAYER_SPEED * dt
 			end
 		end
-		
+
 	end
 end)
 
@@ -132,7 +131,7 @@ local PlayerDrawSystem = System:new(function (app)
 				PLAYER_HEIGHT
 			)
 		end
-		
+
 	end
 end)
 
@@ -155,7 +154,7 @@ local app = App:new()
 function love.load ()
 	seed = os.time()
 	math.randomseed(seed)
-	
+
 	app:create_entity()
 		:add_component(PlayerComponent:new {
 			position_x = WINDOW_WIDTH / 4,
@@ -166,15 +165,15 @@ function love.load ()
 				math.random()
 			}
 		})
-	
+
 	app:add_event("PlayerMovedToOtherHalf")
 	app:get_event("PlayerMovedToOtherHalf"):add_reader(PlayerMovedToOtherHalfEvent)
-	
+
 	app:add_system("Update", PlayerMovedToOtherHalfCheckSystem)
 	app:add_system("Update", PlayerMovementSystem)
 	app:add_system("Draw",   HalfDrawSystem)
 	app:add_system("Draw",   PlayerDrawSystem)
-	
+
 	app:start()
 end
 

@@ -28,6 +28,7 @@ end
 -- APP
 -- ================
 
+--- @class App
 local App = {
 	_Entities = {},
 	_Systems = {
@@ -42,8 +43,8 @@ local App = {
 }
 App.__index = App
 
--- Creates a new App
--- @return table(App)
+--- Creates a new App instance.
+--- @return App
 function App:new ()
 	local new_app = setmetatable({
 		_Entities = {},
@@ -60,8 +61,9 @@ function App:new ()
 	return new_app
 end
 
--- Creates a new entity and returns it.
--- @return table(Entity)
+--- Creates a new entity, adds it to app and returns the entity.
+--- @param components ComponentType[]|ComponentInstance[]
+--- @return Entity
 function App:create_entity (components)
 	local components = components or {}
 
@@ -74,13 +76,13 @@ function App:create_entity (components)
 	end
 
 	table.insert(self._Entities, new_entity)
-	
+
 	return self._Entities[#self._Entities]
 end
 
--- Removes an entity with a specific UUID.
--- May error() the program if the entity does not exist.
--- @param uuid : number (int)
+--- Removes an entity with a specified UUID.
+--- @param uuid integer
+--- @noreturn
 function App:remove_entity (uuid)
 	if type(uuid) ~= "number" then
 		error("Argument \"uuid\" should be a number")
@@ -96,10 +98,9 @@ function App:remove_entity (uuid)
 	error("Cannot remove an non-existent entity (presuming the UUID = " .. uuid .. ")")
 end
 
--- Searches for an entity with a specific UUID and returns it.
--- Returns nil if found none
--- @param uuid : number (int)
--- @return table(Entity) or nil
+--- Return an entity with a specified UUID.
+--- @param uuid integer
+--- @return Entity|nil
 function App:get_entity (uuid)
 	if type(uuid) ~= "number" then
 		error("Argument \"uuid\" should be a number")
@@ -115,10 +116,9 @@ function App:get_entity (uuid)
 	return nil
 end
 
--- Searches for a resource with a specific name and returns it.
--- Returns nil if found none
--- @param resource : table(Resource)
--- @return table(Resource) or nil
+--- Returns a resource with a specified name.
+--- @param resource Resource
+--- @return Resource|nil
 function App:get_resource (resource)
 	if type(resource) ~= "table" then
 		error("Argument \"resource\" should be a table of Resource")
@@ -134,6 +134,9 @@ function App:get_resource (resource)
 	return nil
 end
 
+--- Get event writer from the app's event array.
+--- @param event_name string
+--- @return EventReader
 function App:get_event (event_name)
 	if type(event_name) ~= "string" then
 		error("Argument \"event_name\" should be a string")
@@ -142,11 +145,11 @@ function App:get_event (event_name)
 	return self._Events[event_name]
 end
 
--- Adds a system to the schedule
--- May error() the program if the arguments don't match parameters
--- @param schedule : string ["startup"|"update"|"draw"]
--- @param system : function(app) [function(app, dt) for "Update" schedule] OR table(System)
--- @return self : table(App)
+--- Adds a system to the schedule.
+--- Schedule must be one of these values: 'startup', 'update', 'draw'.
+--- The case of the name is insensitive.
+--- @param schedule string
+--- @param system function
 function App:add_system (schedule, system)
 	if type(schedule) ~= "string" then
 		error("Argument \"schedule\" should be a string")
@@ -179,55 +182,59 @@ function App:add_system (schedule, system)
 	return self
 end
 
--- Adds a plugin
--- May error() the program if the arguments don't match parameters
--- @param plugin : table(Plugin)
--- @return self : table(App)
+--- Adds a plugin to app.
+--- @param plugin Plugin
+--- @return self
 function App:add_plugin (plugin)
 	if type(plugin) ~= "table" then
 		error("Argument \"plugin\" should be a table of Plugin")
 	end
-	
+
 	table.insert(self._Plugins, plugin)
 
 	return self
 end
 
--- Adds a resource.
--- May error() the program if the arguments don't match parameters
--- @param resource : table(Resource)
--- @return self : table(App)
+--- Adds a resource to app.
+--- @param resource Resource
+--- @return self
 function App:add_resource (resource)
 	if type(resource) ~= "table" then
 		error("Argument \"resource\" should be a table of Resource")
 	end
-	
+
 	table.insert(self._Resources, resource)
-	
+
 	return self
 end
 
+--- Adds an event to app.
+--- @param event_name string
+--- @return self
 function App:add_event (event_name)
 	if type(event_name) ~= "string" then
 		error("Argument \"event_name\" should be a string")
 	end
-	
+
 	self._Events[event_name] = Event:new_writer(event_name)
-	
+
 	return self
 end
 
--- Returns an entire table of entities
--- @return table(Entity)[]
+--- Returns an entire table of entities.
+--- @return Entity[]
 function App:get_entities ()
 	return self._Entities
 end
 
+--- Clears a table of entities.
+--- @noreturn
 function App:clear_entities ()
 	self._Entities = {}
 end
 
--- Dispatches a Startup schedule to systems and starts plugins
+--- Dispatches a Startup schedule to systems and starts plugins
+--- @noreturn
 function App:start ()
 	for _, v in pairs(self._Plugins) do
 		v.build(self)
@@ -240,8 +247,8 @@ function App:start ()
 	end
 end
 
--- Dispatches an Update schedule to systems
--- @param dt : float
+--- Dispatches an Update schedule to systems
+--- @param dt number
 function App:update (dt)
 	for _, v in pairs(self._Systems._Update) do
 		if v.enabled then
@@ -250,7 +257,8 @@ function App:update (dt)
 	end
 end
 
--- Dispatches a Draw schedule to systems
+--- Dispatches a Draw schedule to systems
+--- @noreturn
 function App:draw ()
 	for _, v in pairs(self._Systems._Draw) do
 		if v.enabled then

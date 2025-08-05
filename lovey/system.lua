@@ -4,6 +4,7 @@ local PATH = (...):gsub('%.[^%.]+$', '')
 -- SYSTEM
 -- ================
 
+--- @class System
 local System = {
 	_Call = nil,
 

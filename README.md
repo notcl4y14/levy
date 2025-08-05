@@ -65,6 +65,7 @@ As expected, Lovey is written in Lua and for Lua, Bevy is written in Rust and fo
 | Entities can be created from the App table | Entities can be created from the Commands struct |
 
 ## API
+The API may not be up to date.
 ```lua
 -- ================
 -- APP

@@ -37,7 +37,7 @@ local Point = Component:new {
 	y = 0.0,
 	vx = 0.0,
 	vy = 0.0,
-	
+
 	as = 0.0, -- Additional Size, gets decreased each tick until it reaches 0
 }
 
@@ -72,7 +72,7 @@ local function init_points (app)
 		else
 			-- Initializing Point component
 			local point = v:get_component(Point)
-			
+
 			point.x = math.random(0, WINDOW_WIDTH)
 			point.y = math.random(0, WINDOW_HEIGHT)
 
@@ -113,7 +113,7 @@ local function update_points (app, dt)
 
 			point.x = point.x + point.vx * POINT_SPEED * dt
 			point.y = point.y + point.vy * POINT_SPEED * dt
-			
+
 			-- Getting horizontal point bounds and checking them
 			local lbound = point.x - POINT_WIDTH / 2
 			local rbound = point.x + POINT_WIDTH / 2
@@ -127,7 +127,7 @@ local function update_points (app, dt)
 				point.vx = -1
 				point.as = POINT_AS
 			end
-			
+
 			-- Getting vertical point bounds and checking them
 			local tbound = point.y - POINT_HEIGHT / 2
 			local bbound = point.y + POINT_HEIGHT / 2
@@ -288,7 +288,7 @@ local app = nil
 function love.load()
 	-- Start with a different seed
 	math.randomseed(os.time())
-	
+
 	app = App:new()
 		:add_plugin(InitPlugin)
 

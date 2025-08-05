@@ -90,7 +90,7 @@ end)
 local RestartSystem = System:new(function (app)
 	if love.keyboard.isDown("r") and not is_key_r_down then
 		is_key_r_down = true
-		
+
 		app:clear_entities()
 		generate_texts(app)
 	end
@@ -142,12 +142,12 @@ local app = App:new()
 function love.load ()
 	seed = os.time()
 	math.randomseed(seed)
-	
+
 	app:add_system("Startup", StartSystem)
 	app:add_system("Update", RestartSystem)
 	app:add_system("Draw", TextSystem)
 	app:add_system("Draw", DrawInfoSystem)
-	
+
 	app:start()
 end
 

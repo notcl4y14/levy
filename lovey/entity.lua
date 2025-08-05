@@ -8,14 +8,15 @@ local Util      = require(PATH..".util")
 -- ENTITY
 -- ================
 
+--- @class Entity
 local Entity = {
 	_UUID = 0,
 	_Components = {}
 }
 Entity.__index = Entity
 
--- Creates a new Entity
--- @return table(Entity)
+--- Creates a new entity instance.
+--- @return Entity
 function Entity:new ()
 	local new_entity = setmetatable({
 		_UUID = 0,
@@ -25,10 +26,9 @@ function Entity:new ()
 	return new_entity
 end
 
--- Adds a component to the Entity
--- May error() the program if the component already exists
--- @param component : table(Component)
--- @return self : table(Entity)
+--- Adds a component to entity's component array.
+--- @param component Component
+--- @return self
 function Entity:add_component (component)
 	if component._IsComponentType then
 		component = component:new()
@@ -43,9 +43,9 @@ function Entity:add_component (component)
 	return self
 end
 
--- Removes the component from the Entity
--- May error() the program if the component does not exist
--- @param component : table(Component)
+--- Removes the component from entity's component array.
+--- @param component Component
+--- @noreturn
 function Entity:remove_component (component)
 	-- I don't know why would anyone do that.
 	-- Why would anyone submit a ComponentInstance
@@ -57,27 +57,26 @@ function Entity:remove_component (component)
 	if self._Components[component._UUID] == nil then
 		error("Component [" .. component._UUID .. "] cannot be deleted: it is not added")
 	end
-	
+
 	table.remove(self._Components, component._UUID)
 end
 
--- Checks if the Entity has a certain component,
--- returns true if it does.
--- @param component : table(Component)
--- @return bool
+--- Returns whether or not the entity has a certain component.
+--- @param component Component
+--- @return boolean
 function Entity:has_component (component)
 	return self._Components[component._UUID] ~= nil
 end
 
--- Gets the component from the Entity
--- @param component : table(Component)
--- @return table(Component)
+--- Gets a component from entity's component array.
+--- @param component Component
+--- @return ComponentInstance
 function Entity:get_component (component)
 	return self._Components[component._UUID]
 end
 
--- Returns an entire table of Entity components
--- @return table(Component)[]
+--- Returns an entire component array.
+--- @return ComponentInstance[]
 function Entity:get_components ()
 	return self._Components
 end
