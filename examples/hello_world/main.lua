@@ -52,7 +52,7 @@ local TextComponent = Component:new {
 -- ================
 
 local StartSystem = System:new(function (app)
-	generate_texts(app)
+	GenerateTexts(app)
 end)
 
 local TextSystem = System:new(function (app)
@@ -92,7 +92,7 @@ local RestartSystem = System:new(function (app)
 		is_key_r_down = true
 
 		app:clear_entities()
-		generate_texts(app)
+		GenerateTexts(app)
 	end
 
 	is_key_r_down = love.keyboard.isDown("r")
@@ -108,7 +108,7 @@ end)
 -- FUNCTIONS
 -- ================
 
-function generate_texts (app)
+function GenerateTexts (app)
 	for i=1, AMOUNT_OF_TEXTS do
 		local text_x = math.random(0, WINDOW_WIDTH)
 		local text_y = math.random(0, WINDOW_HEIGHT)

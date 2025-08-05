@@ -46,6 +46,8 @@ end
 --- @noreturn
 function EventWriter:remove_reader (uuid)
 	table.remove(self._Readers, uuid)
+
+	return self
 end
 
 --- Emits to all event readers.
@@ -56,6 +58,8 @@ function EventWriter:emit (t)
 	for _, v in pairs(self._Readers) do
 		v._Call(t)
 	end
+
+	return self
 end
 
 -- ================

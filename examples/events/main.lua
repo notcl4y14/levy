@@ -167,7 +167,7 @@ function love.load ()
 		})
 
 	app:add_event("PlayerMovedToOtherHalf")
-	app:get_event("PlayerMovedToOtherHalf"):add_reader(PlayerMovedToOtherHalfEvent)
+		:add_reader(PlayerMovedToOtherHalfEvent)
 
 	app:add_system("Update", PlayerMovedToOtherHalfCheckSystem)
 	app:add_system("Update", PlayerMovementSystem)

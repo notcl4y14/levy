@@ -43,15 +43,28 @@ function Entity:add_component (component)
 	return self
 end
 
+--- Adds a table of components to entity's component array.
+--- @param components Component[]
+--- @return self
+function Entity:add_components (components)
+	for _, component in ipairs(components) do
+		self:add_component(component)
+	end
+
+	return self
+end
+
 --- Removes the component from entity's component array.
 --- @param component Component
---- @noreturn
+--- @return self
 function Entity:remove_component (component)
 	if self._Components[component._UUID] == nil then
 		error("Component [" .. component._UUID .. "] cannot be deleted: it is not added")
 	end
 
 	table.remove(self._Components, component._UUID)
+
+	return self
 end
 
 --- Returns whether or not the entity has a certain component.

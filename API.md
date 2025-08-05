@@ -16,7 +16,7 @@ function App:create_entity (components)
 
 --- Removes an entity with a specified UUID.
 --- @param uuid integer
---- @noreturn
+--- @return self
 function App:remove_entity (uuid)
 
 --- Return an entity with a specified UUID.
@@ -31,15 +31,24 @@ function App:get_resource (resource)
 
 --- Get event writer from the app's event array.
 --- @param event_name string
---- @return EventReader
+--- @return EventReader?
 function App:get_event (event_name)
 
 --- Adds a system to the schedule.
 --- Schedule must be one of these values: 'startup', 'update', 'draw'.
 --- The case of the name is insensitive.
 --- @param schedule string
---- @param system function
+--- @param system function|System
+--- @return self
 function App:add_system (schedule, system)
+
+--- Adds a table of systems to the schedule.
+--- Schedule must be one of these values: 'startup', 'update', 'draw'.
+--- The case of the name is insensitive.
+--- @param schedule string
+--- @param systems function[]|System[]
+--- @return self
+function App:add_systems (schedule, systems)
 
 --- Adds a plugin to app.
 --- @param plugin Plugin
@@ -53,7 +62,7 @@ function App:add_resource (resource)
 
 --- Adds an event to app.
 --- @param event_name string
---- @return self
+--- @return EventWriter
 function App:add_event (event_name)
 
 --- Returns an entire table of entities.
@@ -61,19 +70,20 @@ function App:add_event (event_name)
 function App:get_entities ()
 
 --- Clears a table of entities.
---- @noreturn
+--- @return self
 function App:clear_entities ()
 
 --- Dispatches a Startup schedule to systems and starts plugins
---- @noreturn
+--- @return self
 function App:start ()
 
 --- Dispatches an Update schedule to systems
 --- @param dt number
+--- @return self
 function App:update (dt)
 
 --- Dispatches a Draw schedule to systems
---- @noreturn
+--- @return self
 function App:draw ()
 
 
@@ -121,13 +131,13 @@ function EventWriter:add_reader (call)
 --- Removes the event reader via its UUID.
 --- 
 --- @param uuid integer
---- @noreturn
+--- @return self
 function EventWriter:remove_reader (uuid)
 
 --- Emits to all event readers.
 --- 
 --- @param t any
---- @noreturn
+--- @return self
 function EventWriter:emit (t)
 
 --- Creates a new event writer.
@@ -151,9 +161,14 @@ function Entity:new ()
 --- @return self
 function Entity:add_component (component)
 
+--- Adds a table of components to entity's component array.
+--- @param components Component[]
+--- @return self
+function Entity:add_components (components)
+
 --- Removes the component from entity's component array.
 --- @param component Component
---- @noreturn
+--- @return self
 function Entity:remove_component (component)
 
 --- Returns whether or not the entity has a certain component.

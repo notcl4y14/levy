@@ -91,7 +91,7 @@ function App:remove_entity (uuid)
 	for k, v in pairs(self._Entities) do
 		if v._UUID == uuid then
 			table.remove(self._Entities, k)
-			return
+			return self
 		end
 	end
 
@@ -136,7 +136,7 @@ end
 
 --- Get event writer from the app's event array.
 --- @param event_name string
---- @return EventReader
+--- @return EventReader?
 function App:get_event (event_name)
 	if type(event_name) ~= "string" then
 		error("Argument \"event_name\" should be a string")
@@ -149,7 +149,8 @@ end
 --- Schedule must be one of these values: 'startup', 'update', 'draw'.
 --- The case of the name is insensitive.
 --- @param schedule string
---- @param system function
+--- @param system function|System
+--- @return self
 function App:add_system (schedule, system)
 	if type(schedule) ~= "string" then
 		error("Argument \"schedule\" should be a string")
@@ -160,7 +161,7 @@ function App:add_system (schedule, system)
 	end
 
 	if type(system) ~= "function" and type(system) ~= "table" then
-		error("Argument \"system\" should be either a function or a table of System")
+		error("Argument \"system\" should be either a function or a System")
 	end
 
 	local system = system
@@ -182,15 +183,72 @@ function App:add_system (schedule, system)
 	return self
 end
 
+--- Adds a table of systems to the schedule.
+--- Schedule must be one of these values: 'startup', 'update', 'draw'.
+--- The case of the name is insensitive.
+--- @param schedule string
+--- @param systems function[]|System[]
+--- @return self
+function App:add_systems (schedule, systems)
+	if type(schedule) ~= "string" then
+		error("Argument \"schedule\" should be a string")
+	end
+
+	if not is_schedule_name_valid(schedule) then
+		error("Invalid schedule name \"" .. schedule .. "\", (startup|update|draw)")
+	end
+
+	if type(systems) ~= "table" then
+		error("Argument \"system\" should be either a table of Systems")
+	end
+
+	local schedule = schedule:lower()
+
+	for _, it_system in ipairs(systems) do
+
+		local system = it_system
+
+		if type(system) == "function" then
+			system = System:new(system)
+		end
+
+		if schedule == "startup" then
+			table.insert(self._Systems._Startup, system)
+		elseif schedule == "update" then
+			table.insert(self._Systems._Update, system)
+		elseif schedule == "draw" then
+			table.insert(self._Systems._Draw, system)
+		end
+
+	end
+
+	return self
+end
+
 --- Adds a plugin to app.
 --- @param plugin Plugin
 --- @return self
 function App:add_plugin (plugin)
 	if type(plugin) ~= "table" then
-		error("Argument \"plugin\" should be a table of Plugin")
+		error("Argument \"plugin\" should be a Plugin")
 	end
 
 	table.insert(self._Plugins, plugin)
+
+	return self
+end
+
+--- Adds a table of plugins to app.
+--- @param plugins Plugin[]
+--- @return self
+function App:add_plugins (plugins)
+	if type(plugins) ~= "table" then
+		error("Argument \"plugin\" should be a table")
+	end
+
+	for _, plugin in ipairs(plugins) do
+		table.insert(self._Plugins, plugin)
+	end
 
 	return self
 end
@@ -200,7 +258,7 @@ end
 --- @return self
 function App:add_resource (resource)
 	if type(resource) ~= "table" then
-		error("Argument \"resource\" should be a table of Resource")
+		error("Argument \"resource\" should be a Resource")
 	end
 
 	table.insert(self._Resources, resource)
@@ -208,9 +266,24 @@ function App:add_resource (resource)
 	return self
 end
 
+--- Adds a table of resources to app.
+--- @param resources Resource[]
+--- @return self
+function App:add_ressources (resources)
+	if type(resources) ~= "table" then
+		error("Argument \"resource\" should be a table")
+	end
+
+	for _, resource in ipairs(resources) do
+		table.insert(self._Resources, resource)
+	end
+
+	return self
+end
+
 --- Adds an event to app.
 --- @param event_name string
---- @return self
+--- @return EventWriter
 function App:add_event (event_name)
 	if type(event_name) ~= "string" then
 		error("Argument \"event_name\" should be a string")
@@ -218,7 +291,7 @@ function App:add_event (event_name)
 
 	self._Events[event_name] = Event:new_writer(event_name)
 
-	return self
+	return self._Events[event_name]
 end
 
 --- Returns an entire table of entities.
@@ -231,6 +304,7 @@ end
 --- @noreturn
 function App:clear_entities ()
 	self._Entities = {}
+	return self
 end
 
 --- Dispatches a Startup schedule to systems and starts plugins
@@ -245,6 +319,9 @@ function App:start ()
 			v._Call(self)
 		end
 	end
+
+	-- I mean, why not?
+	return self
 end
 
 --- Dispatches an Update schedule to systems
@@ -255,6 +332,8 @@ function App:update (dt)
 			v._Call(self, dt)
 		end
 	end
+
+	return self
 end
 
 --- Dispatches a Draw schedule to systems
@@ -265,6 +344,8 @@ function App:draw ()
 			v._Call(self)
 		end
 	end
+
+	return self
 end
 
 return App
