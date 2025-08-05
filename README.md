@@ -2,7 +2,7 @@
 
 ## What is Lovey?
 
-**Lovey** is a Lua/LOVE2D library that provides core mechanics of ECS paradigm. The library is inspired by the [Bevy Engine](https://github.com/bevyengine/bevy), [ECS Lua](https://github.com/nidorx/ecs-lua) and [Concord](https://github.com/Keyslam-Group/Concord) libraries. The concept for ECS Lovey uses is quite similar to Bevy's approach to ECS. **It's still in the development stage**.
+**Lovey** is a Lua/LOVE2D library that provides core mechanics of ECS paradigm. The library is inspired by the [Bevy Engine](https://github.com/bevyengine/bevy), [ECS Lua](https://github.com/nidorx/ecs-lua) and [Concord](https://github.com/Keyslam-Group/Concord) libraries. The concept for ECS Lovey uses is quite similar to Bevy's approach to ECS. **It's still not quite full-featured**.
 
 ## Short example
 
@@ -65,3 +65,5 @@ As expected, Lovey is written in Lua and for Lua, Bevy is written in Rust and fo
 | Uses Lua Tables for both Component structs and instances | Uses Rust structs and instances for Components separately |
 | Entire App table can be accessed from the system (might change) | Not quite sure but it seems that it uses specific function parameters for that like Query and Commands |
 | Entities can be created from the App table | Entities can be created from the Commands struct |
+| Mostly is made for LOVE2D and is a separate library | Is a game engine |
+| And many more |
