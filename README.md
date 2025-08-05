@@ -45,13 +45,13 @@ end
 	- Plugins
 	- Resources
 	- A few built-in Component Types ~~and Systems~~
+	- Events
 
 - **Planned features**
 	- Scenes
 	- Queries
 
 - **Quite possible features**
-	- Events
 
 - **Possible features**
 	- Custom schedules

@@ -2,6 +2,7 @@ local PATH = (...):gsub('%.[^%.]+$', '')
 
 local Entity = require(PATH..".entity")
 local System = require(PATH..".system")
+local Event  = require(PATH..".event")
 local Global = require(PATH..".global")
 local Util   = require(PATH..".util")
 
@@ -37,6 +38,7 @@ local App = {
 
 	_Resources = {},
 	_Plugins = {},
+	_Events = {},
 }
 App.__index = App
 
@@ -132,6 +134,14 @@ function App:get_resource (resource)
 	return nil
 end
 
+function App:get_event (event_name)
+	if type(event_name) ~= "string" then
+		error("Argument \"event_name\" should be a string")
+	end
+
+	return self._Events[event_name]
+end
+
 -- Adds a system to the schedule
 -- May error() the program if the arguments don't match parameters
 -- @param schedule : string ["startup"|"update"|"draw"]
@@ -193,6 +203,16 @@ function App:add_resource (resource)
 	end
 	
 	table.insert(self._Resources, resource)
+	
+	return self
+end
+
+function App:add_event (event_name)
+	if type(event_name) ~= "string" then
+		error("Argument \"event_name\" should be a string")
+	end
+	
+	self._Events[event_name] = Event:new_writer(event_name)
 	
 	return self
 end

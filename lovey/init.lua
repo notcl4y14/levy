@@ -12,5 +12,6 @@ lovey.Component = require(PATH..".component")
 lovey.System    = require(PATH..".system")
 lovey.Resource  = require(PATH..".resource")
 lovey.Plugin    = require(PATH..".plugin")
+lovey.Event     = require(PATH..".event")
 
 return lovey
