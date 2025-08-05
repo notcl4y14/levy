@@ -169,10 +169,8 @@ function love.load ()
 	app:add_event("PlayerMovedToOtherHalf")
 		:add_reader(PlayerMovedToOtherHalfEvent)
 
-	app:add_system("Update", PlayerMovedToOtherHalfCheckSystem)
-	app:add_system("Update", PlayerMovementSystem)
-	app:add_system("Draw",   HalfDrawSystem)
-	app:add_system("Draw",   PlayerDrawSystem)
+	app:add_systems("Update", { PlayerMovedToOtherHalfCheckSystem, PlayerMovementSystem })
+	app:add_systems("Draw",   { HalfDrawSystem, PlayerDrawSystem })
 
 	app:start()
 end

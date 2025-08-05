@@ -66,4 +66,4 @@ As expected, Lovey is written in Lua and for Lua, Bevy is written in Rust and fo
 | Entire App table can be accessed from the system (might change) | Not quite sure but it seems that it uses specific function parameters for that like Query and Commands |
 | Entities can be created from the App table | Entities can be created from the Commands struct |
 | Mostly is made for LOVE2D and is a separate library | Is a game engine |
-| And many more |
+And many more

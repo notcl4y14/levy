@@ -199,7 +199,7 @@ function App:add_systems (schedule, systems)
 	end
 
 	if type(systems) ~= "table" then
-		error("Argument \"system\" should be either a table of Systems")
+		error("Argument \"system\" should be a table")
 	end
 
 	local schedule = schedule:lower()
